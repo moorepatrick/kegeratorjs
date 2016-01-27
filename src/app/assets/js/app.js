@@ -1,5 +1,4 @@
 angular = require('angular');
-require('jquery');
 
 (function() {
   var app = angular.module('frontend', []);
@@ -28,7 +27,7 @@ require('jquery');
   app.directive('beerInfo', function(){
     return {
       restrict: "E",
-      templateUrl: "./views/beer-info.html"
+      templateUrl: "./assets/templates/beer-info.html"
     };
   });
 

@@ -1,98 +1,99 @@
 var gulp = require('gulp'),
-  package = require('./package.json'),
-  tap = require('gulp-tap'),
-  webserver = require('gulp-webserver'),
-  rename = require('gulp-rename'),
-  clean = require('gulp-clean'),
-  browserify = require('browserify'),
-  handlebars = require('handlebars'),
-  sourcemaps = require('gulp-sourcemaps'),
-  less = require('gulp-less'),
-  buffer = require('vinyl-buffer'),
-  source = require('vinyl-source-stream');
+webserver = require('gulp-webserver'),
+rename = require('gulp-rename'),
+del = require('del'),
+browserify = require('browserify'),
+sourcemaps = require('gulp-sourcemaps'),
+minifyCSS = require('gulp-minify-css'),
+uglify = require('gulp-uglify'),
+buffer = require('vinyl-buffer'),
+source = require('vinyl-source-stream'),
+jshint = require('gulp-jshint'),
+plumber = require('gulp-plumber');
 
 var path = {
-  tmpl: './src/app/tmpl/**/*.hbs',
-  style: './src/app/style/**/*.less',
-  js: './src/app/js/**/*.js',
-  images: './src/app/images/**/*.*',
-  server: './src/server/**.js',
-  index: './src/app/*.hbs'
+  images:    './src/app/assets/images/**/*.*',
+  js:        './src/app/assets/js/**/*.js',
+  vendor:    './src/app/assets/js/vendor/**/*.*',
+  style:     './src/app/assets/style/**/*.css',
+  templates: './src/app/assets/templates/**/*.html',
+  index:     './src/app/index.html'
 };
 
-gulp.task('js', function() {
-  var bundler = browserify({
-    entries: ['./src/app/js/app.js'],
-    debug: true
-  });
-
-  var bundle = function() {
-    return bundler
-      .bundle()
-      .pipe(source(package.name + '.' + package.version + '.js'))
-      .pipe(buffer())
-      .pipe(sourcemaps.init({loadMaps: true}))
-      .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest('./build/js/'));
-  };
-  return bundle();
+gulp.task('delete', function(){
+  return del(['build/**/*'])
+    .then(function(err){
+      console.log('Files Deleted');
+    });
 });
 
 gulp.task('images', function() {
   return gulp.src(path.images)
-    .pipe(gulp.dest('./build/images'));
+    .pipe(gulp.dest('./build/assets/images'));
 });
 
-gulp.task('style', function() {
-  return gulp.src(path.style)
-    .pipe(less({
-        paths: ['./node_modules/bootstrap/less']
-      }))
-    .pipe(gulp.dest('./build/style'));
+gulp.task('style', function(){
+  return gulp
+    .src('.src/assets/style/style.css')
+    //.pipe(minifyCSS())
+    //.pipe(rename({suffix: '.min'}))
+    .pipe(gulp.dest('./build/assets/style'));
 });
 
-gulp.task('index', function() {
+gulp.task('styleVendor', function(){
+  return gulp.src('./src/app/assets/style/bootstrap.min.css')
+  .pipe(gulp.dest('./build/assets/style/vendor'));
+});
+
+gulp.task('jsVendor', function(){
+  return gulp.src(path.vendor)
+  .pipe(gulp.dest('./build/assets/js/vendor'));
+});
+
+gulp.task('js', function(){
+  var bundler = browserify({
+    entries: ['./src/app/assets/js/app.js'],
+    debug: true
+  });
+
+  var bundle = function(){
+    return bundler
+      .bundle()
+      .pipe(source('bundle.js'))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({loadMaps: true}))
+      .pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest('./build/assets/js/'));
+  };
+
+  return bundle();
+  /*return gulp
+    .src('js/script.js')
+    .pipe(plumber())
+    .pipe(uglify())
+    .pipe(jshint())
+    .pipe(rename({suffix: '.min'}))
+    .pipe(gulp.dest('./build/js'));
+    */
+});
+
+gulp.task('index', function(){
   return gulp.src(path.index)
-    .pipe(tap(function(file, t) {
-    var template = handlebars.compile(file.contents.toString());
-    var html = template(package);
-    file.contents = new Buffer(html, 'utf-8');
-    }))
-    .pipe(rename(function(path) {
-    path.extname = '.html';
-    }))
-    .pipe(gulp.dest('build/'));
+    .pipe(gulp.dest('./build/'));
 });
 
-gulp.task('webserver', function() {
-  return gulp.src('./build')
-    .pipe(webserver({
-      host: '0.0.0.0',
-      livereload: true,
-      // directoryListing: true,
-      open: true,
-      proxies: [{
-        source: '/api',
-        target: 'http://localhost:5000/api'
-      }]
-    }));
+gulp.task('templates', function(){
+  return gulp.src('./src/app/assets/templates/**/*')
+    .pipe(gulp.dest('./build/assets/templates'));
 });
 
-gulp.task('clean', function() {
-  return gulp.src('./build')
-    .pipe(clean());
-});
+gulp.task('build', ['js', 'jsVendor', 'style', 'styleVendor', 'index', 'templates', 'images']);
 
-gulp.task('build', ['js', 'style', 'index', 'images']);
-
-gulp.task('watch', ['build'], function() {
+gulp.task('watch', ['build'], function(){
   gulp.watch(path.js, ['js']);
   gulp.watch(path.style, ['style']);
-  gulp.watch(path.tmpl, ['js']);
   gulp.watch(path.images, ['images']);
   gulp.watch(path.index, ['index']);
 });
 
-gulp.task('develop', ['watch', 'webserver']);
-
-gulp.task('default', ['build']);
+gulp.task('default', ['watch']);
