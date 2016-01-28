@@ -9,6 +9,7 @@ uglify = require('gulp-uglify'),
 buffer = require('vinyl-buffer'),
 source = require('vinyl-source-stream'),
 jshint = require('gulp-jshint'),
+merge = require('merge-stream'),
 plumber = require('gulp-plumber');
 
 var path = {
@@ -34,27 +35,33 @@ gulp.task('images', function() {
 
 gulp.task('style', function(){
   return gulp
-    .src('.src/assets/style/style.css')
+    .src('./src/assets/style/style.css')
     //.pipe(minifyCSS())
     //.pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest('./build/assets/style'));
 });
 
 gulp.task('styleVendor', function(){
-  return gulp.src('./src/app/assets/style/bootstrap.min.css')
+  return gulp.src('./src/app/assets/style/vendor/**/*')
   .pipe(gulp.dest('./build/assets/style/vendor'));
 });
 
-gulp.task('jsVendor', function(){
-  return gulp.src(path.vendor)
-  .pipe(gulp.dest('./build/assets/js/vendor'));
+// gulp.task('jsVendor', function(){
+//   return gulp.src(path.vendor)
+//   .pipe(gulp.dest('./build/assets/js/vendor'));
+// });
+
+gulp.task('jsAll', function(){
+  return gulp.src('./src/app/assets/js/*/*.js')
+  .pipe(gulp.dest('./build/assets/js/'));
 });
 
 gulp.task('js', function(){
   var bundler = browserify({
-    entries: ['./src/app/assets/js/app.js'],
+    entries: ['./src/app/assets/js/app.js', './src/app/assets/js/routes.js'],
     debug: true
   });
+
 
   var bundle = function(){
     return bundler
@@ -87,13 +94,15 @@ gulp.task('templates', function(){
     .pipe(gulp.dest('./build/assets/templates'));
 });
 
-gulp.task('build', ['js', 'jsVendor', 'style', 'styleVendor', 'index', 'templates', 'images']);
+gulp.task('build', [ 'jsAll', 'js', 'style', 'styleVendor', 'index', 'templates', 'images']);
 
 gulp.task('watch', ['build'], function(){
+  gulp.watch('./src/app/assets/js/*/*.js', ['jsAll']);
   gulp.watch(path.js, ['js']);
   gulp.watch(path.style, ['style']);
   gulp.watch(path.images, ['images']);
   gulp.watch(path.index, ['index']);
+  gulp.watch(path.templates, ['templates']);
 });
 
 gulp.task('default', ['watch']);

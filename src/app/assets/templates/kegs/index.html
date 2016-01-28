@@ -1,0 +1,36 @@
+<div class="col-sm-6" ng-repeat="keg in kegs">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h2>Keg {{keg.id + 1}}: {{keg.beer.name}}</h2>
+      <h3>{{keg.beer.description}}</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row text-center">
+        <h3>Beer Info</h3>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+
+          <h4><b>Style:</b> {{keg.beer.style}}</h4>
+          <h4><b>ABV:</b> {{keg.beer.abv}}</h4>
+          <h4><b>IBU:</b> {{keg.beer.ibu}}</h4>
+          <h4><b>Brewer:</b> {{keg.beer.brewedBy}}</h4>
+        </div>
+
+        <div class="col-sm-6">
+          <h4><b>Capacity:</b> {{keg.capacityL | number:2}}L / {{keg.capacityL | literToPint:2}}pt</h4>
+          <h4><b>Consumed:</b> {{keg.consumedL | number:2}}L / {{keg.consumedL | literToPint:2}}pt</h4>
+          <h4><b>Remaining</b> {{keg.capacityL - keg.consumedL | number:2}}L / {{keg.capacityL - keg.consumedL | literToPint:2}}pt</h4>
+        </div>
+      </div>
+      <div class="row col-sm-10 col-sm-offset-1">
+        <h4>Remaining</h4>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" style="min-width: 2em; width: {{((keg.capacityL - keg.consumedL)/keg.capacityL)*100}}%">
+            {{keg.capacityL - keg.consumedL | literToPint:2}}pt
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

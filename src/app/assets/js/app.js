@@ -1,63 +1,69 @@
-angular = require('angular');
+require('jquery');
+require('angular');
+require('angular-route');
+require('angular-resource');
 
-(function() {
-  var app = angular.module('frontend', []);
+angular.module('Kegerator', ['ngRoute', 'ngResource']);
 
-  app.controller('SiteController', ['$http', function($http) {
-    var vm = this;
-    vm.beers = beers;
-
-    /*$http.get('http://192.168.33.11:5000/api/v1/beers/').success(function(data){
-      vm.beers = data;
-    });*/
-  }]);
-
-  app.controller("PanelController", function(){
-    this.tab = 1;
-
-
-    this.selectTab = function(setTab){
-      this.tab = setTab;
-    };
-    this.isSelected = function(checkTab){
-      return this.tab === checkTab;
-    };
-  });
-
-  app.directive('beerInfo', function(){
-    return {
-      restrict: "E",
-      templateUrl: "./assets/templates/beer-info.html"
-    };
-  });
-
-  var beers = [
-  {
-    abv: 9.5,
-    brewedBy: "Nic Wiles",
-    costPerPint: 1.4,
-    description: "This is a chilli infused Belgian Quad",
-    ibu: 15.0,
-    id: 1,
-    name: "Spicy Quad",
-    rating: 4.0,
-    srm: 30.0,
-    style: "Belgian Quad"
-  },
-  {
-    abv: 4.5,
-    brewedBy: "Will Shaler",
-    costPerPint: 1.4,
-    description: "This is a ginger infused apple cider",
-    ibu: 15.0,
-    id: 2,
-    name: "Ginger Cider",
-    rating: 4.0,
-    srm: 30.0,
-    style: "Apple Cider"
-  }];
-
-})();
+// (function() {
+//   var app = angular.module('Kegerator', ['ngRoute', 'ngResource']);
+//
+//   app.controller('SiteController', ['$http', function($http) {
+//     var vm = this;
+//     //vm.beers = beers;
+//
+//     $http.get('http://192.168.33.11:5000/api/v1/beers/').success(function(data){
+//       vm.beers = data.data;
+//       //console.log(data);
+//     });
+//   }]);
+//
+//   app.controller("PanelController", function(){
+//     this.tab = 1;
+//
+//
+//     this.selectTab = function(setTab){
+//       this.tab = setTab;
+//     };
+//     this.isSelected = function(checkTab){
+//       return this.tab === checkTab;
+//     };
+//   });
+//
+//   app.directive('beerInfo', function(){
+//     return {
+//       restrict: "E",
+//       templateUrl: "./assets/templates/beer-info.html"
+//     };
+//   });
+//
+//   var beers = [
+//   {
+//     abv: 9.5,
+//     brewedBy: "Nic Wiles",
+//     costPerPint: 1.4,
+//     description: "This is a chilli infused Belgian Quad",
+//     ibu: 15.0,
+//     id: 1,
+//     name: "Spicy Quad",
+//     rating: 4.0,
+//     srm: 30.0,
+//     style: "Belgian Quad"
+//   },
+//   {
+//     abv: 4.5,
+//     brewedBy: "Will Shaler",
+//     costPerPint: 1.4,
+//     description: "This is a ginger infused apple cider",
+//     ibu: 15.0,
+//     id: 2,
+//     name: "Ginger Cider",
+//     rating: 4.0,
+//     srm: 30.0,
+//     style: "Apple Cider"
+//   }];
+//
+// })();
 
 /*var $ = require('jquery');
 var _ = require('underscore');

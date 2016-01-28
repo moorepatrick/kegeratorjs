@@ -1,16 +1,19 @@
-angular = require('angular');
 require('jquery');
+require('angular');
+require('angular-route');
+require('angular-resource');
 
 (function() {
-  var app = angular.module('frontend', []);
+  var app = angular.module('Kegerator', []);
 
   app.controller('SiteController', ['$http', function($http) {
     var vm = this;
-    vm.beers = beers;
+    //vm.beers = beers;
 
-    /*$http.get('http://192.168.33.11:5000/api/v1/beers/').success(function(data){
+    $http.get('http://192.168.33.11:5000/api/v1/beers/').success(function(data){
       vm.beers = data;
-    });*/
+      console.log(data);
+    });
   }]);
 
   app.controller("PanelController", function(){
@@ -28,7 +31,7 @@ require('jquery');
   app.directive('beerInfo', function(){
     return {
       restrict: "E",
-      templateUrl: "./views/beer-info.html"
+      templateUrl: "./assets/templates/beer-info.html"
     };
   });
 

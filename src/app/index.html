@@ -1,32 +1,37 @@
 <!DOCTYPE html>
-<html ng-app="frontend">
+<html ng-app="Kegerator">
 
 <head>
+  <title>KegeratorJS</title>
   <link rel="stylesheet" type="text/css" href="./assets/style/vendor/bootstrap.min.css" />
-  <link rel="stylesheet" type="text/css" href="./assets/style/style.css" />
-  <!-- <script type="text/javascript" src="./js/angular.min.js"></script> -->
-  <!-- <script type="text/javascript" src="./js/app.js"></script> -->
-  <!-- <script type="text/javascript" src="./js/vendor/angular.min.js"></script> -->
-  <script type="text/javascript" src="./assets/js/bundle.js"></script>
+  <link rel="stylesheet" type="text/css" href="./assets/style/vendor/bootstrap-theme.css">
+  <!-- <link rel="stylesheet" type="text/css" href="./assets/style/style.css" /> -->
+
 </head>
 
-<body class="container" ng-controller="SiteController as site">
-  <div ng-init="panel.selectTab(1)" ng-controller="PanelController as panel">
-    <header class="header text-center">
-      <h1>Kegerator <small>JIRA for Beer</small></h1>
-      <ul class="nav nav-pills pull-right">
-        <li ng-class="{active:panel.isSelected(1)}"><a href ng-click="panel.selectTab(1)">Kegs</a></li>
-        <li ng-class="{active:panel.isSelected(2)}"><a href ng-click="panel.selectTab(2)">Realtime</a></li>
-        <li ng-class="{active:panel.isSelected(3)}"><a href ng-click="panel.selectTab(3)">History</a></li>
-      </ul>
-    </header>
+<body>
+  <kg-page-nav></kg-page-nav>
+  <!-- <nav class="container" ng-controller="SiteController as site">
+    <div ng-init="panel.selectTab(1)" ng-controller="PanelController as panel">
+      <header class="header text-center">
+        <h1>Kegerator <small>JIRA for Beer</small></h1>
+        <ul class="nav nav-pills pull-right">
+          <li ng-class="{active:panel.isSelected(1)}"><a href ng-click="panel.selectTab(1)">Kegs</a></li>
+          <li ng-class="{active:panel.isSelected(2)}"><a href ng-click="panel.selectTab(2)">Realtime</a></li>
+          <li ng-class="{active:panel.isSelected(3)}"><a href ng-click="panel.selectTab(3)">History</a></li>
+        </ul>
+      </header>
+    </div>
+  </nav> -->
 
-    <div ng-show="panel.isSelected(1)">
+  <div ng-view class="container-fluid">
+  </div>
+  <!-- <div ng-show="panel.isSelected(1)">
       <div class="col-md-offset-1">
-        <h3>Keg Stats</h3>
-        <!-- CO2 Sensor -->
-        <!-- Temp Info -->
-      </div>
+        <h3>Keg Stats</h3> -->
+  <!-- CO2 Sensor -->
+  <!-- Temp Info -->
+  <!-- </div>
       <div class="list-group">
         <div class="list-group-item col-md-5 col-md-offset-1" ng-repeat="beer in site.beers">
           <beer-info></beer-info>
@@ -44,6 +49,21 @@
       <h3>History</h3>
     </div>
     </div>
-  </div>
+  </div> -->
 </body>
+
+<!-- <script type="text/javascript" src="./js/angular.min.js"></script> -->
+<!-- <script type="text/javascript" src="./js/app.js"></script> -->
+<!-- <script type="text/javascript" src="./js/vendor/angular.min.js"></script> -->
+<!-- App -->
+<script src="./assets/js/bundle.js"></script>
+<!-- Controllers -->
+<script src="./assets/js/controllers/kegIndexController.js"></script>
+<!-- Directives -->
+<script src="./assets/js/directives/kgPageNav.js"></script>
+<!-- Services -->
+<script src="./assets/js/services/keg.js"></script>
+<script src="./assets/js/services/beer.js"></script>
+<!-- Filters -->
+<script src="./assets/js/filters/literToPint.js"></script>
 </html>

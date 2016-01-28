@@ -8,13 +8,13 @@ A web enabled kegerator powered by a Javascript front end and Python (Flask) bac
   - To resolve dependencies run ```./dependencies``` on the target
   - Deploy to remote host using ```./deploy```
   - Manage server on remote host using ```./start``` ```./stop``` and ```./restart```
-  - To copy your public key to the remote host so you don't have to type a password you can run ```./copyKey``` 
+  - To copy your public key to the remote host so you don't have to type a password you can run ```./copyKey```
 
 ###Running without hardware###
-  - mocks are used when the host name is not "ike" 
+  - mocks are used when the host name is not "ike"
   - To run tests locally use ```./unitTest``` (be sure to resolve dependencies first)
   - To run the server locally with mocked HW support, run ```./src/server/main.py```
- 
+
 
 ##MODELS##
 
@@ -44,12 +44,12 @@ A web enabled kegerator powered by a Javascript front end and Python (Flask) bac
   - srm (color, optional)
 
 ###keg model (from api.py)###
-  - id (PK)... can just be index in 
+  - id (PK)... can just be index in
   - beerId (maps to a beer model)
   - capacityL
   - consumedL
   - flowRateLitersPerSec
-  
+
 ###event model (from api.py)###
   - id (PK)
   - timestamp
@@ -61,7 +61,7 @@ A web enabled kegerator powered by a Javascript front end and Python (Flask) bac
     - thermostatSense: current thermostat sensed value chaged
     - thermostatSettings: current thermostat settings changed
   - data (arbitrary json string useful for the particular event)
-  
+
 ###user model (coming in 1.0)###
   - id
   - name
@@ -73,10 +73,10 @@ A web enabled kegerator powered by a Javascript front end and Python (Flask) bac
 ##VIEWS##
 
 ###beer info###
-  
+
   - small display of pertinent beer info
   - have an "advanced" button, maybe pops up a modal?
-  
+
 ###beer list###
 
   - just a list of beer info's for all beer in system
@@ -108,7 +108,7 @@ A web enabled kegerator powered by a Javascript front end and Python (Flask) bac
   - end date
   - filteredType
   - list of event log entries
-  
+
 ###event log entry###
   - will vary depending on type... a table row maybe?
 
@@ -120,9 +120,20 @@ A web enabled kegerator powered by a Javascript front end and Python (Flask) bac
   - return
 	  - json serialzation of kegerator model
 
+#####Example#####
+```
+{
+  "kegIds": [
+    0,
+    1
+  ],
+  "name": "Ike2"
+}
+```
+
 ####PUT####
   update kegerator settings
-  
+
   - return
 	  - json serialzation of kegerator model
 
@@ -133,22 +144,54 @@ A web enabled kegerator powered by a Javascript front end and Python (Flask) bac
   - parameters
   - limit (optional, default to 100) (coming in 1.0)
 
+#####Example#####
+  ```
+  {
+  "data": [
+    {
+      "abv": 9.5,
+      "brewedBy": "Nic Wiles",
+      "costPerPint": 1.4,
+      "description": "This is a chilli infused Belgian Quad",
+      "ibu": 15.0,
+      "id": 1,
+      "name": "Spicy Quad",
+      "rating": 4.0,
+      "srm": 30.0,
+      "style": "Belgian Quad"
+    },
+    {
+      "abv": 4.5,
+      "brewedBy": "Will Shaler",
+      "costPerPint": 1.4,
+      "description": "This is a ginger infused apple cider",
+      "ibu": 15.0,
+      "id": 2,
+      "name": "Ginger Cider",
+      "rating": 4.0,
+      "srm": 30.0,
+      "style": "Apple Cider"
+    }
+  ]
+}
+```
+
 ####POST####
   create a new beer, creating new Id, add to beer DB
-  
+
   - parameters
      - whatever fields the beer model needs
   - return ID of new beer
 
 ####GET \<beerId\>####
   get info about beer at \<beerId\>
-  
-  - return full json of beer 
+
+  - return full json of beer
 
 ####PUT \<beerId\>####
 
   edit beer at \<beerId\>
-  
+
   - parameters
     - whatever fields that need updating
   - return
@@ -156,7 +199,7 @@ A web enabled kegerator powered by a Javascript front end and Python (Flask) bac
 
 ####DELETE \<beerId\>####
   delete beer at \<beerId\>
-  
+
   - return
 	  - empty json
 
@@ -165,18 +208,41 @@ A web enabled kegerator powered by a Javascript front end and Python (Flask) bac
 ####GET####
   - return all kegs in keg db
 
+#####Example#####
+
+```
+{
+  "data": [
+    {
+      "beerId": 2,
+      "capacityL": 17.0,
+      "consumedL": 7.007777777777778,
+      "flowRateLitersPerSec": 0.0,
+      "id": 0
+    },
+    {
+      "beerId": 1,
+      "capacityL": 17.0,
+      "consumedL": 14.022592592592648,
+      "flowRateLitersPerSec": 0.0,
+      "id": 1
+    }
+  ]
+}
+```
+
 ####GET \<kegId\>####
   get info about keg at \<kegId\>
-  
+
   - return
-	  - full json of keg 
+	  - full json of keg
 
 ####PUT \<kegId\>####
   edit keg at \<kegId\>
-  
+
   - parameters
 	  - whatever fields that need updating
-  - return full json of updated keg 
+  - return full json of updated keg
 
 ###events (/api/v1/events)###
 
