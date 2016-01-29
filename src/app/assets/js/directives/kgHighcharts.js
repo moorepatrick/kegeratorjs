@@ -11,7 +11,6 @@ angular.module("Kegerator").directive('kgHighcharts', function(){
     },
     link: function(scope, element){
         thisChart = Highcharts.chart(element[0], scope.options);
-        console.log(thisChart);
         Highcharts.thisChart = thisChart;
       }
   };

@@ -17,7 +17,7 @@ angular.module('Kegerator').controller('HistoryIndexController', function(Event,
       legend: {
         enabled: false
       },
-      series: []
+      series: [{data: []}]
     };
 
     var thing = Event.query().$promise.then(function(data) {
@@ -42,6 +42,7 @@ angular.module('Kegerator').controller('HistoryIndexController', function(Event,
       options.series = series;
       console.log(JSON.stringify(series));
       //return options;
+      Highcharts.charts[0].series[0].setData(options.series[0].data);
     });
     console.log(options.series);
     return options;
