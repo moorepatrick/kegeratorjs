@@ -30,6 +30,7 @@
     "angular-route": "^1.4.9",
     "bootstrap": "3.3.2",
     "highcharts-browserify": "^0.1.5",
+    "highcharts-ng": "0.0.11",
     "jquery": "2.1.4"
   }
 }

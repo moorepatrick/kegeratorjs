@@ -145,7 +145,7 @@ A web enabled kegerator powered by a Javascript front end and Python (Flask) bac
   - limit (optional, default to 100) (coming in 1.0)
 
 #####Example#####
-  ```
+```
   {
   "data": [
     {
