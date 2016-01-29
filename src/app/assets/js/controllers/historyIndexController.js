@@ -41,7 +41,7 @@ angular.module('Kegerator').controller('HistoryIndexController', function(Event,
 
       options.series = series;
       console.log(JSON.stringify(series));
-      return options;
+      //return options;
     });
     console.log(options.series);
     return options;
