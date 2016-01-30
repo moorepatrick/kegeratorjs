@@ -17,6 +17,7 @@ angular.module('Kegerator').controller('HistoryIndexController', function(Event,
       legend: {
         enabled: false
       },
+<<<<<<< HEAD
 
 
 
@@ -28,6 +29,10 @@ angular.module('Kegerator').controller('HistoryIndexController', function(Event,
       series: [ { data: [ ] } ]
 
 
+=======
+      series: [ { data: [ ] } ]
+
+>>>>>>> origin/pm_angular_frontend
     };
 
     var thing = Event.query().$promise.then(function(data) {
@@ -52,7 +57,11 @@ angular.module('Kegerator').controller('HistoryIndexController', function(Event,
       options.series = series;
       console.log(JSON.stringify(series));
 <<<<<<< HEAD
+<<<<<<< HEAD
       //return options;
+=======
+      Highcharts.charts[0].series[0].setData(options.series[0].data)
+>>>>>>> origin/pm_angular_frontend
 =======
       Highcharts.charts[0].series[0].setData(options.series[0].data)
 >>>>>>> origin/pm_angular_frontend
