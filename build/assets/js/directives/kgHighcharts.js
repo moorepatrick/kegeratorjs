@@ -12,6 +12,10 @@ angular.module("Kegerator").directive('kgHighcharts', function(){
     link: function(scope, element){
         thisChart = Highcharts.chart(element[0], scope.options);
         Highcharts.thisChart = thisChart;
+
+        scope.$on('$destroy', function(){
+          console.log("kgHighcharts Destroyed");
+        });
       }
   };
 });
