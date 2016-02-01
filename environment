@@ -1,3 +1,3 @@
 #!/bin/bash
-USER_NAME=pi
-IP_ADDR=ike
+USER_NAME=localdev
+IP_ADDR=ikedev
