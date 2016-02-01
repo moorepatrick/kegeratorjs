@@ -21,3 +21,4 @@ emacs.xml
 *.log
 *.egg*
 env
+build
