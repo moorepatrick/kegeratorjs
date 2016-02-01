@@ -1,6 +1,5 @@
 
 angular.module("Kegerator").directive('kgHighcharts', function(){
-
   return {
     replace: true,
     restrict: "E",
@@ -10,11 +9,14 @@ angular.module("Kegerator").directive('kgHighcharts', function(){
       options: '='
     },
     link: function(scope, element){
-        thisChart = Highcharts.chart(element[0], scope.options);
-        Highcharts.thisChart = thisChart;
+        var thisChart = Highcharts.chart(element[0], scope.options);
+        //console.log(element[0]);
+        //Highcharts.thisChart = thisChart;
 
         scope.$on('$destroy', function(){
           console.log("kgHighcharts Destroyed");
+          console.log(thisChart);
+          thisChart.destroy();
         });
       }
   };
