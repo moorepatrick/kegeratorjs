@@ -18,6 +18,34 @@ angular.module('Kegerator').controller('HistoryIndexController', function(Event,
 
   $scope.pourHistory = (function() {
     var options = {
+      chart: {
+        type: 'line',
+        events: {
+          load: function() {
+            console.log("Pour History This");
+            console.log(this);
+            var chart = this;
+            // chart.series[0].data = [
+            //   [1438226380168.7993, 0.31796296296296295],
+            // ];
+
+            Event.query().$promise.then(function(data) {
+              var allEvents = data.data;
+
+              var pourEvents = allEvents.filter(function(item) {
+                return item.type === "pouredBeer";
+              });
+
+              pourEvents.forEach(function(event) {
+                var x = event.time * 1000;
+                chart.series[0].data.push([x, parseFloat(event.data.volumeL)]);
+              });
+
+              chart.series[0].setData(chart.series[0].data);
+            });
+          }
+        }
+      },
       title: {
         text: 'Pour History'
       },
@@ -34,40 +62,55 @@ angular.module('Kegerator').controller('HistoryIndexController', function(Event,
         enabled: false
       },
       series: [{
+        name: "Pours",
         data: []
       }]
     };
 
-    Event.query().$promise.then(function(data) {
-      var events = data.data;
-
-      var series = ['Pours'].map(function(seriesName) {
-        return {
-          data: []
-        };
-      });
-
-      var pourEvents = events.filter(function(item) {
-        return item.type == "pouredBeer";
-      });
-
-      pourEvents.forEach(function(event) {
-        var x = event.time * 1000;
-        series[0].data.push([x, parseFloat(event.data.volumeL)]);
-        //series[0].data.push(parseFloat(event.data.volumeL));
-      });
-
-      options.series = series;
-      console.log(JSON.stringify(series));
-      //return options;
-      Highcharts.charts[0].series[0].setData(options.series[0].data);
-    });
-    //console.log(options.series);
     return options;
   })();
 
   $scope.temperatureHistory = (function() {
     var options = {
+      chart: {
+        type: 'line',
+        events: {
+          load: function() {
+            console.log("Pour History This");
+            console.log(this);
+            var chart = this;
+
+            Event.query().$promise.then(function(data) {
+              var allEvents = data.data;
+
+              var temperatureEvents = allEvents.filter(function(item) {
+                return item.type === "thermostatSense";
+              });
+
+              Thermostat.query().$promise.then(function(data) {
+                $scope.thermostat = data.data;
+
+                temperatureEvents.forEach(function(event) {
+                  var x = event.time * 1000,
+                    setPointDegC = parseFloat($scope.thermostat.setPointDegC),
+                    deadBandDegC = parseFloat($scope.thermostat.deadBandDegC);
+
+                  chart.series[0].data.push([x, parseFloat(event.data.degC)]);
+                  chart.series[1].data.push([x, setPointDegC]);
+                  chart.series[2].data.push([x, parseFloat(event.data.avgDegC)]);
+                  chart.series[3].data.push([x, setPointDegC + deadBandDegC]);
+                  chart.series[4].data.push([x, setPointDegC - deadBandDegC]);
+                });
+
+                chart.series.forEach(function(item, index) {
+                  item.setData(chart.series[index].data,false);
+                });
+                chart.redraw();
+              });
+            });
+          }
+        }
+      },
       title: {
         text: 'Temperature History'
       },
@@ -84,55 +127,28 @@ angular.module('Kegerator').controller('HistoryIndexController', function(Event,
         enabled: false
       },
       series: [
-        {name: 'Sensed',data: []},
-        {name: 'Commanded',data: []},
-        {name: 'Average',data: []},
-        {name: 'UpperLimit',data: []},
-        {name: 'LowerLimit',data: []}
-      ]
+      {
+        name: 'Sensed',
+        data: []
+      },
+      {
+        name: 'Commanded',
+        data: []
+      },
+      {
+        name: 'Average',
+        data: []
+      },
+      {
+        name: 'UpperLimit',
+        data: []
+      },
+      {
+        name: 'LowerLimit',
+        data: []
+      }]
     };
 
-    Event.query().$promise.then(function(data) {
-      var events = data.data;
-
-      var series = ['Sensed', 'Commanded', 'Average', 'UpperLimit', 'LowerLimit'].map(function(seriesName) {
-        return {
-          name: seriesName,
-          data: []
-        };
-      });
-      console.log(series);
-
-      var temperatureEvents = events.filter(function(item) {
-        return item.type == "thermostatSense";
-      });
-
-      Thermostat.query().$promise.then(function(data) {
-        $scope.thermostat = data.data;
-        console.log($scope.thermostat);
-
-        temperatureEvents.forEach(function(event) {
-          var x = event.time * 1000,
-            setPointDegC = parseFloat($scope.thermostat.setPointDegC),
-            deadBandDegC = parseFloat($scope.thermostat.deadBandDegC);
-
-          series[0].data.push([x, parseFloat(event.data.degC)]);
-          series[1].data.push([x, setPointDegC]);
-          series[2].data.push([x, parseFloat(event.data.avgDegC)]);
-          series[3].data.push([x, setPointDegC + deadBandDegC]);
-          series[4].data.push([x, setPointDegC - deadBandDegC]);
-        });
-
-        options.series = series;
-        //console.log(JSON.stringify(series));
-        //return options;
-        Highcharts.charts[1].series.forEach(function(item, index){
-          //item.name = options.series[index].name;
-          item.setData(options.series[index].data);
-        });
-      });
-    });
-    //console.log(options.series);
     return options;
   })();
 });
