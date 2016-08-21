@@ -42,7 +42,7 @@ gulp.task('style', function(){
 });
 
 gulp.task('styleVendor', function(){
-  return gulp.src('./src/app/assets/style/vendor/**/*')
+  return gulp.src('./src/app/assets/style/vendor/**/*.*')
   .pipe(gulp.dest('./build/assets/style/vendor'));
 });
 
